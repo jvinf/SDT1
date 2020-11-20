@@ -1,19 +1,31 @@
-import rpyc
-from constRPYC import * #-
-from rpyc.utils.server import ThreadedServer
-
-class Directory(rpyc.Service): # classe de implementação do servidor
+class Directory(rpyc.Service):
     registry = {}
 
-    def exposed_register(self, server_name, ip_address, port_number):#metodo para o servidor de aplicação fazer o registro, recebe o nome do servidor, ip e porta
-        self.registry[server_name] = (ip_address, port_number) #registra no dicionario o ip e a porta associadas ao nome do servidor que está como indice
-        print(self.registry) #imprime o servidor reagindo
-        return "Registro OK" #retorna a confirmação de registro pro cliente que é o servidor de aplicação
+    def exposed_register(self, server_name, ip_address, port_number):  #Registra o servidor
+        message = 'Registrado'
+        registered = True
 
-    def exposed_lookup(self, server_name): #metodo paraos clientes  fazerem o lookup, recebe o nome do servidor do cliente
-        print (self.registry) #imprime o servidor reagindo
-        return self.registry[server_name] #retorna os dados referente ao servidor requisit^Z
+        if server_name not in self.registry: # Condição que verifica se o nome do servidor não está no registro
+            self.registry[server_name] = (ip_address, port_number)
+        elif self.registry[server_name][0] == ip_address:
+            self.registry[server_name] = (ip_address, port_number)
+        else:
+            message = 'O servidor já está registrado'
+            registered = False
+        print (self.registry)
+        return (registered, message)
 
-if __name__ == "__main__": #cria uma thread dentro do processo capaz de rodar os metodos da classe Directory
-    server = ThreadedServer(Directory, port = DIR_PORT)
-    server.start()
+    def exposed_unregister(self, server_name): #Método que faz o unregister do servidor
+        if server_name in self.registry:
+            del self.registry[server_name]
+            return f'Servidor {server_name} foi desregistrado'
+        else:
+            return f'Nome do servidor não existe'
+
+
+    def exposed_lookup(self, server_name):
+        if server_name in self.registry: #Condição que verifica se o servidor existe
+            print (self.registry)
+            return self.registry[server_name]
+        else:
+            print ('O nome do servidor não existe')
