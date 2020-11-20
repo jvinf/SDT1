@@ -2,7 +2,7 @@ No repositório existem 4 arquivos utilizados nessa primeira tarefa
 
 server.py: esse é o codigo fonte do servidor de aplicação, que tem os metodos requisitados pelo client. Sua função básica é aceitar conexões, as funções detalhadas estão comentadas no arquivo fonte. 
 
-serverDIR.py: Arquivo do servidor de diretórios, onde existe a classe Directory com os métodos de registro e de lookup no servidor de diretorio
+serverDIR.py: Arquivo do servidor de diretórios, onde existe a classe Directory com os métodos de registro desregistro e de lookup no servidor de diretorio
  
 client.py: O Client se conecta com o servidor de diretório e após é feito o lookup, após receber os dados com ip e porta o client faz a conexão com o servidor de aplicação.
 
